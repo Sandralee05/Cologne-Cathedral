@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kölner Dom - Official Case Study</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #0d0d0d;
+            color: #e2e8f0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        .academic-badge {
+            background-color: #050505;
+            color: #666;
+            font-size: 0.75rem;
+            padding: 10px 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: -apple-system, sans-serif;
+            border-bottom: 1px solid #1a1a1a;
+            position: relative;
+            z-index: 10;
+        }
+
+        .official-nav {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: rgba(13,13,13,0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(138,109,59,0.2);
+            z-index: 1000;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 58px;
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #cfb53b;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #718096;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            transition: all 0.25s ease;
+            position: relative;
+            padding: 0 16px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 16px; right: 16px;
+            height: 2px;
+            background-color: #cfb53b;
+            transform: scaleX(0);
+            transition: transform 0.25s ease;
+        }
+
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { transform: scaleX(1); }
+
+        .hero {
+            height: 85vh;
+            background: linear-gradient(rgba(13,13,13,0.1), rgba(13,13,13,0.95)),
+                url('https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F173307%2Ff52dd6355ee4339a04c5885ba1b62bda848c5c9129fb5c9b20a72d1a824eac52%2Fcologne-cathedral.jpg&scale=both&mode=crop&quality=90&width=2560') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: #cfb53b;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .dashboard-bar {
+            background-color: #121212;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+        }
+
+        .db-item {
+            position: relative;
+            padding: 44px 20px;
+            cursor: pointer;
+            transition: background 0.35s ease;
+            overflow: hidden;
+        }
+
+        .db-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: #cfb53b;
+            transform: scaleX(0);
+            transition: transform 0.35s ease;
+        }
+
+        .db-item:hover { background: rgba(207,181,59,0.04); }
+        .db-item:hover::before { transform: scaleX(1); }
+
+        .db-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0; top: 20%;
+            height: 60%; width: 1px;
+            background-color: #2d2d2d;
+        }
+
+        .db-item .icon { font-size: 1.6rem; margin-bottom: 10px; display: block; transition: transform 0.3s ease; }
+        .db-item:hover .icon { transform: scale(1.15); }
+        .db-item .value { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 6px; transition: color 0.3s; }
+        .db-item:hover .value { color: #cfb53b; }
+        .db-item .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #64748b; font-weight: 500; transition: color 0.3s; }
+        .db-item:hover .label { color: #a0aec0; }
+
+        .flip-block {
+            opacity: 0;
+            transform: perspective(900px) rotateX(12deg) translateY(50px);
+            transform-origin: bottom center;
+            transition: opacity 0.9s cubic-bezier(0.23,1,0.32,1), transform 0.9s cubic-bezier(0.23,1,0.32,1);
+            will-change: transform, opacity;
+        }
+
+        .flip-block.visible {
+            opacity: 1;
+            transform: perspective(900px) rotateX(0deg) translateY(0);
+        }
+
+        .hero-content.flip-block { transition-duration: 1.2s; transform: perspective(1000px) rotateX(10deg) translateY(60px); }
+        .hero-content.flip-block.visible { transform: perspective(1000px) rotateX(0deg) translateY(0); }
+
+        .section-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        .eyebrow {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #cfb53b;
+            font-family: -apple-system, sans-serif;
+            margin-bottom: 10px;
+        }
+
+        #overview { padding: 90px 0 80px; border-bottom: 1px solid rgba(207,181,59,0.08); }
+
+        .overview-banner {
+            background: linear-gradient(135deg, rgba(207,181,59,0.06) 0%, rgba(207,181,59,0.02) 100%);
+            border: 1px solid rgba(207,181,59,0.15);
+            border-radius: 10px;
+            padding: 40px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-banner::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #cfb53b, rgba(207,181,59,0.2));
+        }
+
+        .overview-inner { display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: center; }
+
+        .overview-text h2 { font-size: 2rem; font-weight: 400; color: #fff; margin-bottom: 18px; letter-spacing: -0.3px; }
+        .overview-text p { font-size: 1.06rem; color: #cbd5e0; line-height: 2; }
+        .overview-text p em { color: #cfb53b; font-style: normal; font-weight: 500; }
+
+        .overview-img {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+            aspect-ratio: 1 / 1;
+            background: #000;
+        }
+
+        .overview-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform 0.9s ease; }
+        .overview-img:hover img { transform: scale(1.05); }
+
+        #history { padding: 90px 0 0; }
+
+        .cathedral-intro { text-align: center; margin-bottom: 56px; }
+        .cathedral-intro h2 { font-size: 2.4rem; font-weight: 400; color: #fff; letter-spacing: -0.5px; margin-bottom: 14px; }
+        .cathedral-intro p { font-size: 1rem; color: #64748b; max-width: 560px; margin: 0 auto; line-height: 1.8; }
+
+        .timeline { position: relative; padding-bottom: 80px; }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%; top: 0; bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, rgba(207,181,59,0.5) 0%, rgba(207,181,59,0.06) 100%);
+            transform: translateX(-50%);
+        }
+
+        .tl-item { display: grid; grid-template-columns: 1fr 48px 1fr; align-items: start; margin-bottom: 56px; cursor: pointer; }
+
+        .tl-item:nth-child(odd) .tl-content  { grid-column: 1; text-align: right; padding-right: 40px; }
+        .tl-item:nth-child(odd) .tl-node     { grid-column: 2; }
+        .tl-item:nth-child(odd) .tl-media    { grid-column: 3; padding-left: 40px; }
+        .tl-item:nth-child(even) .tl-media   { grid-column: 1; padding-right: 40px; }
+        .tl-item:nth-child(even) .tl-node    { grid-column: 2; }
+        .tl-item:nth-child(even) .tl-content { grid-column: 3; text-align: left; padding-left: 40px; }
+
+        .tl-node { display: flex; flex-direction: column; align-items: center; padding-top: 6px; }
+
+        .tl-dot {
+            width: 14px; height: 14px;
+            background: #0d0d0d;
+            border: 2px solid #cfb53b;
+            border-radius: 50%;
+            position: relative; z-index: 1;
+            transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .tl-item:hover .tl-dot { background: #cfb53b; box-shadow: 0 0 0 5px rgba(207,181,59,0.15); transform: scale(1.2); }
+        .tl-year { font-size: 1.35rem; font-weight: 700; color: #cfb53b; font-family: -apple-system, sans-serif; margin-bottom: 8px; transition: color 0.3s; }
+        .tl-item:hover .tl-year { color: #fff; }
+        .tl-title { font-size: 1rem; font-weight: 600; color: #e2e8f0; margin-bottom: 8px; font-family: -apple-system, sans-serif; transition: color 0.3s; }
+        .tl-item:hover .tl-title { color: #fff; }
+        .tl-desc { font-size: 0.88rem; color: #64748b; line-height: 1.75; transition: color 0.3s; }
+        .tl-item:hover .tl-desc { color: #94a3b8; }
+
+        .tl-tag {
+            display: inline-block;
+            font-size: 0.62rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 2px;
+            margin-bottom: 8px;
+            font-family: -apple-system, sans-serif;
+        }
+        .tl-tag.war   { color: #e05a5a; border: 1px solid rgba(224,90,90,0.35); }
+        .tl-tag.peace { color: #cfb53b; border: 1px solid rgba(207,181,59,0.35); }
+
+        .tl-media {
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+        }
+        .tl-item:hover .tl-media { box-shadow: 0 18px 45px rgba(0,0,0,0.6); transform: translateY(-3px); }
+
+        .tl-media img {
+            width: 100%; height: 190px;
+            object-fit: cover; display: block;
+            transition: transform 0.8s ease, filter 0.4s ease;
+            filter: brightness(0.72) saturate(0.75);
+        }
+        .tl-item:hover .tl-media img { transform: scale(1.06); filter: brightness(0.95) saturate(1); }
+
+        .tl-item.tl-war .tl-dot { border-color: #c0392b; width: 16px; height: 16px; }
+        .tl-item.tl-war:hover .tl-dot { background: #c0392b; box-shadow: 0 0 0 5px rgba(192,57,43,0.18); }
+        .tl-item.tl-war .tl-year { color: #e05a5a; }
+        .tl-item.tl-war:hover .tl-year { color: #fff; }
+        .tl-item.tl-war .tl-media img { filter: brightness(0.55) saturate(0.3) sepia(0.4); }
+        .tl-item.tl-war:hover .tl-media img { filter: brightness(0.8) saturate(0.6) sepia(0.15); }
+
+        #introduction { background: #080808; border-top: 1px solid rgba(207,181,59,0.08); padding: 90px 0; }
+
+        .intro-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .intro-inner h2 { font-size: 2.4rem; font-weight: 400; color: #fff; letter-spacing: -0.5px; margin-bottom: 36px; }
+
+        .video-wrapper {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(207,181,59,0.1);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.65);
+            margin-bottom: 36px;
+            background: #000;
+        }
+
+        .video-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+        .intro-body { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .intro-body p { font-size: 1.05rem; color: #94a3b8; line-height: 1.9; }
+
+        .main-wrapper { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+        .content-section { margin-bottom: 100px; }
+        .content-section:last-child { margin-bottom: 0; }
+
+        .content-section h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 10px;
+            padding-left: 22px;
+            letter-spacing: -0.3px;
+            border-left: 3px solid #cfb53b;
+            line-height: 1.3;
+        }
+
+        .content-section .sub-label {
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #cfb53b;
+            font-family: -apple-system, sans-serif;
+            margin-bottom: 8px;
+            padding-left: 22px;
+        }
+
+        .case-card {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .case-card:hover { border-color: rgba(207,181,59,0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .case-card.reverse { direction: rtl; }
+        .case-card.reverse > * { direction: ltr; }
+
+        .case-text {
+            padding: 44px 48px;
+            background: rgba(255,255,255,0.015);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: background 0.4s ease;
+        }
+
+        .case-card:hover .case-text { background: rgba(207,181,59,0.03); }
+
+        .case-text p {
+            font-size: 1.05rem;
+            color: #94a3b8;
+            line-height: 1.95;
+            text-align: justify;
+            transition: color 0.3s;
+        }
+
+        .case-card:hover .case-text p { color: #b0bec5; }
+
+        .case-img {
+            position: relative;
+            overflow: hidden;
+            background: #0d0d0d;
+            display: flex;
+            align-items: stretch;
+            padding-top: 40px;
+        }
+
+        .case-img img {
+            width: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.9s ease, filter 0.4s ease;
+            filter: brightness(0.8) saturate(0.85);
+            flex: 1;
+        }
+
+        .case-card:hover .case-img img { transform: scale(1.04); filter: brightness(0.95) saturate(1); }
+
+        .case-img-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(207,181,59,0.08) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .case-card:hover .case-img-overlay { opacity: 1; }
+
+        /* ===== VISITOR INFO ===== */
+        #visitor {
+            background: #080808;
+            border-top: 1px solid rgba(207,181,59,0.08);
+            padding: 90px 0 80px;
+        }
+
+        .visitor-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .visitor-inner h2 {
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .visitor-inner .visitor-sub {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 50px;
+            line-height: 1.7;
+        }
+
+        /* 统一五列一行 */
+        .visitor-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .v-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 24px 20px 20px;
+            transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .v-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #cfb53b, rgba(207,181,59,0.3));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.35s ease;
+        }
+
+        .v-card:hover {
+            border-color: rgba(207,181,59,0.3);
+            background: rgba(207,181,59,0.04);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+        }
+
+        .v-card:hover::before { transform: scaleX(1); }
+
+        .v-card-icon {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .v-card:hover .v-card-icon { transform: scale(1.12); }
+
+        .v-card-label {
+            font-size: 0.62rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #cfb53b;
+            font-family: -apple-system, sans-serif;
+            margin-bottom: 6px;
+        }
+
+        .v-card-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+            font-family: -apple-system, sans-serif;
+            line-height: 1.4;
+        }
+
+        .v-card p {
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.65;
+            transition: color 0.3s;
+        }
+
+        .v-card:hover p { color: #94a3b8; }
+
+        .v-card .v-highlight {
+            display: block;
+            margin-top: 12px;
+            font-size: 0.72rem;
+            color: #cfb53b;
+            font-family: -apple-system, sans-serif;
+            letter-spacing: 0.3px;
+            opacity: 0.85;
+        }
+
+        /* ===== REFERENCES ===== */
+        #references { padding: 80px 0 60px; border-top: 1px solid rgba(207,181,59,0.12); }
+
+        .ref-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .ref-img {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+            aspect-ratio: 1 / 1;
+            background: #000;
+        }
+
+        .ref-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+        .ref-img:hover img { transform: scale(1.04); }
+
+        .ref-text { padding-top: 8px; }
+
+        .ref-text h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #fff;
+            letter-spacing: -0.3px;
+            margin-bottom: 28px;
+            border-left: 3px solid #cfb53b;
+            padding-left: 22px;
+        }
+
+        .ref-list { list-style: none; padding: 0; margin: 0; }
+
+        .ref-list li {
+            font-size: 0.92rem;
+            line-height: 1.75;
+            color: #cbd5e0;
+            padding: 14px 0 14px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            position: relative;
+        }
+
+        .ref-list li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 22px;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #cfb53b;
+            opacity: 0.7;
+        }
+
+        .ref-list li:last-child { border-bottom: none; }
+
+        .ref-list li a {
+            color: #cfb53b;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(207,181,59,0.3);
+            transition: color 0.3s, border-color 0.3s;
+            word-break: break-all;
+        }
+
+        .ref-list li a:hover { color: #fff; border-color: #cfb53b; }
+
+        footer {
+            background-color: #050505;
+            color: #555;
+            text-align: center;
+            padding: 50px 20px;
+            font-size: 0.85rem;
+            border-top: 1px solid #1a1a1a;
+            font-family: -apple-system, sans-serif;
+        }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .hero-content h1 { font-size: 2.4rem; }
+            .dashboard-container { grid-template-columns: 1fr; }
+            .db-item:not(:last-child)::after { display: none; }
+            .overview-inner { grid-template-columns: 1fr; }
+            .overview-img { display: none; }
+            .overview-banner { padding: 28px; }
+            .timeline::before { left: 20px; }
+            .tl-item { grid-template-columns: 1fr; gap: 16px; padding-left: 44px; }
+            .tl-item:nth-child(odd) .tl-content,
+            .tl-item:nth-child(even) .tl-content { grid-column: 1; text-align: left; padding: 0; }
+            .tl-item:nth-child(odd) .tl-node,
+            .tl-item:nth-child(even) .tl-node { display: none; }
+            .tl-item:nth-child(odd) .tl-media,
+            .tl-item:nth-child(even) .tl-media { grid-column: 1; padding: 0; }
+            .intro-body { grid-template-columns: 1fr; }
+            .case-card, .case-card.reverse { grid-template-columns: 1fr; direction: ltr; }
+            .case-img { padding-top: 0; min-height: 240px; }
+            .visitor-grid { grid-template-columns: 1fr 1fr; }
+            .ref-container { grid-template-columns: 1fr; }
+            .ref-img { max-width: 360px; margin: 0 auto; }
+            .flip-block { transform: perspective(600px) rotateX(8deg) translateY(30px); transition-duration: 0.7s; }
+            .flip-block.visible { transform: perspective(600px) rotateX(0deg) translateY(0); }
+        }
+
+        @media (max-width: 560px) {
+            .visitor-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="academic-badge">
+    Case Study Submission &nbsp;|&nbsp; Name: Mushan Li &nbsp;|&nbsp; Student ID: 2300880116
+</div>
+
+<nav class="official-nav">
+    <div class="nav-container">
+        <div class="nav-logo">Kölner Dom</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#history">History</a></li>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#location">Location</a></li>
+            <li><a href="#significance">Significance</a></li>
+            <li><a href="#visitor">Visitor Guide</a></li>
+            <li><a href="#references">References</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-content flip-block">
+        <h1>Kölner Dom</h1>
+        <p>Gazing through 7 Centuries</p>
+    </div>
+</header>
+
+<section class="dashboard-bar flip-block">
+    <div class="dashboard-container">
+        <div class="db-item">
+            <span class="icon">📍</span>
+            <div class="value">Cologne, Germany</div>
+            <div class="label">Location Focus</div>
+        </div>
+        <div class="db-item">
+            <span class="icon">👥</span>
+            <div class="value">6 Million + / Year</div>
+            <div class="label">Annual Visitors</div>
+        </div>
+        <div class="db-item">
+            <span class="icon">⭐</span>
+            <div class="value">UNESCO · 1996</div>
+            <div class="label">World Heritage Site</div>
+        </div>
+    </div>
+</section>
+
+<section id="overview">
+    <div class="section-inner">
+        <div class="overview-banner flip-block">
+            <div class="overview-inner">
+                <div class="overview-text">
+                    <p class="eyebrow">Overview</p>
+                    <h2>An Enduring Monument<br>to Human Ambition</h2>
+                    <p>Cologne Cathedral rises on the banks of the Rhine in <em>Cologne, Germany's fourth-largest city</em> — the grandest Gothic church in northern Europe. Its <em>iconic twin spires</em> pierce the skyline at 157 metres, while the interior shelters an unrivalled collection of medieval art and sacred treasures (Lewis and Britannica Editors, 2026). Inscribed as a <em>UNESCO World Heritage Site</em> in 1996, the cathedral's architectural unity and timeless artistic power draw visitors from every corner of the world.</p>
+                </div>
+                <div class="overview-img">
+                    <img src="https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F173310%2Fa164ccdb16477a3e603eec59c03627fdceb8528eb2c37005bde78f5d8fe4f23d%2Fcologne-cathedral.jpg&scale=both&mode=crop&quality=90&width=2560" alt="Cologne Cathedral Overview">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="history">
+    <div class="section-inner" style="padding-top:90px;">
+        <div class="cathedral-intro">
+            <p class="eyebrow">History</p>
+            <h2>632 Years in the Making</h2>
+            <p>From a medieval pilgrimage relic to a Gothic masterpiece that survived world war — the long story of Kölner Dom (Visit Köln, 2025).</p>
+        </div>
+
+        <div class="timeline">
+
+            <div class="tl-item">
+                <div class="tl-content">
+                    <div class="tl-year">1164</div>
+                    <div class="tl-title">The Relic Arrives</div>
+                    <div class="tl-desc">Archbishop Rainald von Dassel brings the relics of the Three Wise Men from Milan, making Cologne one of medieval Europe's foremost pilgrimage destinations.</div>
+                </div>
+                <div class="tl-node"><div class="tl-dot"></div></div>
+                <div class="tl-media">
+                    <img src="https://bkimg.cdn.bcebos.com/pic/4afbfbedab64034f78f0fa59609b6e310a55b319b76e?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080" alt="1164">
+                </div>
+            </div>
+
+            <div class="tl-item">
+                <div class="tl-media">
+                    <img src="https://bkimg.cdn.bcebos.com/pic/faedab64034f78f0f736a1acb6691d55b319ebc4b66e?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080" alt="1248">
+                </div>
+                <div class="tl-node"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                    <div class="tl-year">1248</div>
+                    <div class="tl-title">Foundation Stone Laid</div>
+                    <div class="tl-desc">Archbishop Konrad von Hochstaden breaks ground on a new High Gothic cathedral. Master builder Meister Gerhard models it on the great French cathedrals of the age.</div>
+                </div>
+            </div>
+
+            <div class="tl-item">
+                <div class="tl-content">
+                    <div class="tl-year">1560</div>
+                    <div class="tl-title">Construction Halts</div>
+                    <div class="tl-desc">The Reformation and financial exhaustion bring work to a standstill. A wooden crane sits atop the unfinished south tower for over 300 years, becoming a city landmark in itself.</div>
+                </div>
+                <div class="tl-node"><div class="tl-dot"></div></div>
+                <div class="tl-media">
+                    <img src="https://bkimg.cdn.bcebos.com/pic/79f0f736afc379310a55a276249ca04543a98226bb6e?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080" alt="1560">
+                </div>
+            </div>
+
+            <div class="tl-item">
+                <div class="tl-media">
+                    <img src="https://bkimg.cdn.bcebos.com/pic/aec379310a55b319ebc4a42a8cf19526cffc1e17b96e?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080" alt="1880">
+                </div>
+                <div class="tl-node"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                    <div class="tl-year">1880</div>
+                    <div class="tl-title">Completion & World Record</div>
+                    <div class="tl-desc">After 632 years, the twin spires reach 157 m — briefly the tallest structure on earth. Kaiser Wilhelm I attends the ceremony, cementing the cathedral as a symbol of the new German Empire.</div>
+                </div>
+            </div>
+
+            <div class="tl-item tl-war">
+                <div class="tl-content">
+                    <div class="tl-tag war">World War II</div>
+                    <div class="tl-year">1944</div>
+                    <div class="tl-title">Standing Amid the Ruins</div>
+                    <div class="tl-desc">Allied bombing raids reduce 80% of Cologne to rubble. The cathedral sustains 14 direct hits but never falls — its twin spires rise above the devastated city, becoming an iconic image of resilience broadcast around the world.</div>
+                </div>
+                <div class="tl-node"><div class="tl-dot"></div></div>
+                <div class="tl-media">
+                    <img src="https://pic3.zhimg.com/v2-3950eab76fab7b5b1ec2893dc722e322_1440w.jpg" alt="1944 WWII">
+                </div>
+            </div>
+
+            <div class="tl-item">
+                <div class="tl-media">
+                    <img src="https://ts1.tc.mm.bing.net/th/id/R-C.fbaa50c000f1179a71116a0b0c6f9a75?rik=09sMmpBo2AYmKA&riu=http%3a%2f%2fd.ifengimg.com%2fq100%2fimg1.ugc.ifeng.com%2fnewugc%2f20190424%2f8%2fwemedia%2fa4ee3774c78f6e2fbabecbec4d5b8f85d6c8cf30_size1714_w897_h1354.png&ehk=mniT5DV4VNtSwFQ0s87pcBYEoGlaOAKwn4zyN1C8gpE%3d&risl=&pid=ImgRaw&r=0" alt="1996 UNESCO">
+                </div>
+                <div class="tl-node"><div class="tl-dot"></div></div>
+                <div class="tl-content">
+                    <div class="tl-tag peace">UNESCO · 1996</div>
+                    <div class="tl-year">1996</div>
+                    <div class="tl-title">World Heritage Inscription</div>
+                    <div class="tl-desc">UNESCO designates Cologne Cathedral a World Heritage Site, recognising it as an exceptional work of human creative genius — drawing over 6 million visitors every year to this day.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="introduction">
+    <div class="intro-inner flip-block">
+        <p class="eyebrow">Monumental Legacy</p>
+        <h2>The Pinnacle of Gothic Mastery</h2>
+        <div class="video-wrapper">
+            <iframe src="https://player.bilibili.com/player.html?bvid=BV1uX4y1371W&page=1&autoplay=1&loop=1&muted=1&high_quality=1"
+                scrolling="no" frameborder="no" allow="autoplay; fullscreen" allowfullscreen="true"></iframe>
+        </div>
+        <div class="intro-body">
+            <p>Cologne Cathedral is a masterwork of Gothic architecture that took 632 years to fully realize. Towering over the Rhine, its twin spires define the city's identity and stand as an everlasting monument to European spiritual ambition.</p>
+            <p>Today it operates not only as a sacred sanctuary but as a premier global cultural tourism destination, drawing over six million visitors annually — blending structural sublimity with outstanding modern governance.</p>
+        </div>
+    </div>
+</section>
+
+<main class="main-wrapper">
+
+    <section id="location" class="content-section">
+        <div class="sub-label">Why Visitors Always Find It</div>
+        <h2>A Cathedral at the<br>Heart of the City</h2>
+        <div class="case-card flip-block">
+            <div class="case-text">
+                <p>Unlike many heritage sites tucked away on isolated peripheries, Cologne Cathedral stands directly adjacent to Cologne Central Railway Station — one of Europe's busiest rail hubs, handling over 280,000 passengers daily. Stepping off any train, visitors are met immediately by the cathedral's towering façade. This zero-distance proximity eliminates spatial friction entirely, creating an instant "Wow-Effect" that no other major landmark in Europe can replicate, and effortlessly converting transit traffic into cultural footfall (Nadeau, 2024).</p>
+            </div>
+            <div class="case-img">
+                <img src="https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F1511504%2F37487a7a473e316f8f7c5ccfac6dbc6a3604dd9919f6d78827024af6abe0086c%2Fcologne-cathedral.jpg&scale=both&mode=crop&quality=90&width=2560&focuspoint=-0.05,0.34" alt="Cathedral Location">
+                <div class="case-img-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="significance" class="content-section">
+        <div class="sub-label">What Makes It a Global Destination</div>
+        <h2>Sacred Heritage,<br>Global Reach</h2>
+        <div class="case-card reverse flip-block">
+            <div class="case-text">
+                <p>Cologne Cathedral demonstrates how a historic religious site can be strategically positioned as a world-class destination without compromising its cultural integrity. Its sustained global appeal rests on three pillars: exceptional physical accessibility, an unmistakable iconographic identity — the twin spires are one of the most photographed silhouettes in Europe — and a robust governance model that balances active religious use with high-volume tourism, drawing more than 6 million visitors annually while preserving the site for future generations (Nadeau, 2024).</p>
+            </div>
+            <div class="case-img">
+                <img src="https://www.singulart.com/blog/wp-content/uploads/2019/09/cut.jpg" alt="Cathedral Significance">
+                <div class="case-img-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- VISITOR INFO — 5张卡片一行，文字精简 -->
+<section id="visitor">
+    <div class="visitor-inner flip-block">
+        <p class="eyebrow">Practical Information</p>
+        <h2>How to Experience Kölner Dom</h2>
+        <p class="visitor-sub">Essential tips for planning your visit.</p>
+
+        <div class="visitor-grid">
+
+            <div class="v-card">
+                <span class="v-card-icon">🚆</span>
+                <div class="v-card-label">Getting There</div>
+                <div class="v-card-title">Steps from the Station</div>
+                <p>Cologne Central Station (Köln Hbf) sits right beside the cathedral. From Cologne Bonn Airport, take the S13 — about 15 min.</p>
+                <span class="v-highlight">↳ Walk out any exit — the spires are straight ahead</span>
+            </div>
+
+            <div class="v-card">
+                <span class="v-card-icon">🕐</span>
+                <div class="v-card-label">Opening Hours</div>
+                <div class="v-card-title">Open Every Day</div>
+                <p>Nave: 06:00–20:00 (May–Oct) · 06:00–19:30 (Nov–Apr). Tower & treasury close earlier; reduced hours on Sunday mornings.</p>
+                <span class="v-highlight">↳ Before 09:00 is the quietest</span>
+            </div>
+
+            <div class="v-card">
+                <span class="v-card-icon">🎟️</span>
+                <div class="v-card-label">Admission</div>
+                <div class="v-card-title">Nave Free</div>
+                <p>Nave entry is free. Tower: €6 adult / €3 child. Treasury: €8 / €4. Combined ticket: €12. Tours from €12.</p>
+                <span class="v-highlight">↳ Tower tickets at the south entrance</span>
+            </div>
+
+            <div class="v-card">
+                <span class="v-card-icon">📅</span>
+                <div class="v-card-label">Best Time</div>
+                <div class="v-card-title">Apr–May · Sep–Oct</div>
+                <p>Spring and autumn offer fewer crowds. December brings the Christmas Market. Peak season (Jun–Aug) sees 20,000+ daily.</p>
+                <span class="v-highlight">↳ Avoid Sunday mornings (Mass until noon)</span>
+            </div>
+
+            <div class="v-card">
+                <span class="v-card-icon">💡</span>
+                <div class="v-card-label">Visitor Tips</div>
+                <div class="v-card-title">Don't Miss</div>
+                <p>Climb the 533-step south tower for Rhine views. See the Shrine of the Three Kings and the Gerhard Richter stained-glass window.</p>
+                <span class="v-highlight">↳ Photography allowed (no flash)</span>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="references">
+    <div class="ref-container flip-block">
+        <div class="ref-img">
+            <img src="https://i0.wp.com/worldhistoryjournal.com/wp-content/uploads/2025/06/pexels-photo-356624.jpeg?w=1880&ssl=1" alt="Cologne Cathedral historical photo">
+        </div>
+        <div class="ref-text">
+            <p class="eyebrow">References</p>
+            <h2>Sources & Further Reading</h2>
+            <ul class="ref-list">
+                <li>
+                    Lewis, R. and Britannica Editors (2026) Cologne Cathedral, <em>Encyclopædia Britannica</em>. Available from
+                    <a href="https://www.britannica.com/topic/Cologne-Cathedral" target="_blank">https://www.britannica.com/topic/Cologne-Cathedral</a>
+                    [accessed 25 June 2026].
+                </li>
+                <li>
+                    Nadeau, S. (2024) Everything you must know about visiting Cologne Cathedral, <em>Solo Sophie</em>. Available from
+                    <a href="https://www.solosophie.com/cologne-cathedral/" target="_blank">https://www.solosophie.com/cologne-cathedral/</a>
+                    [accessed 26 June 2026].
+                </li>
+                <li>
+                    Visit Köln (2025) It was the highest building in the world in 1880, after 632 years of construction, <em>Cologne Tourism</em>. Available from
+                    <a href="https://www.cologne-tourism.com/arts-culture/sights/cologne-cathedral/construction-history" target="_blank">https://www.cologne-tourism.com/arts-culture/sights/cologne-cathedral/construction-history</a>
+                    [accessed 25 June 2026].
+                </li>
+                <li>
+                    UNESCO (1996) Cologne Cathedral, <em>World Heritage Convention</em>. Available from
+                    <a href="https://whc.unesco.org/en/list/292" target="_blank">https://whc.unesco.org/en/list/292</a>
+                    [accessed 25 June 2026].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer>
+    &copy; 2026 Kölner Dom Case Study.
+</footer>
+
+<script>
+    (function () {
+        const flipBlocks = document.querySelectorAll('.flip-block');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+        flipBlocks.forEach(el => observer.observe(el));
+    })();
+</script>
+
+</body>
+</html>
